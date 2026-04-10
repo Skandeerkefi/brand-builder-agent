@@ -10,8 +10,19 @@
     "text": "#e5e7eb"
   },
   "routes": [
-    { "path": "/", "redirect": "/dashboard" },
-    { "path": "/login", "public": true, "component": "Login" },
-    { "path": "/dashboard", "protected": true, "component": "Dashboard" }
+    {
+      "path": "/",
+      "redirect": "/dashboard"
+    },
+    {
+      "path": "/login",
+      "public": true,
+      "component": "Login"
+    },
+    {
+      "path": "/dashboard",
+      "protected": true,
+      "component": "Dashboard"
+    }
   ]
 }
