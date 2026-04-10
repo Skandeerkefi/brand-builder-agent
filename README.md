@@ -30,20 +30,56 @@ merge the PR to apply them.
 | Command | Description |
 |---------|-------------|
 | `init`  | Scaffold the full MERN monorepo (web, api, shared, spec) |
+| `generate-site` (alias `site`) | Generate the Skalfos public marketing site with view-only leaderboard |
+
+### generate-site command
+
+```
+/agent generate-site {"name":"Skalfos","mode":"view-only","leaderboardPrize":1000,"region":"worldwide"}
+```
+
+**Args:**
+
+| Arg | Type | Default | Description |
+|-----|------|---------|-------------|
+| `name` | string | `"Skalfos"` | Site/brand name |
+| `theme` | object | `{"primary":"black","accent":"light"}` | Brand theme |
+| `leaderboardPrize` | number | `1000` | Monthly prize amount (USD) |
+| `region` | string | `"worldwide"` | Target region |
+| `mode` | string | `"view-only"` | Site mode (no wagering logic) |
 
 ## Repository structure
 
 ```
 .github/workflows/agent.yml  # Agent workflow
 agent/                        # Agent Node.js project (runs in CI)
+  src/
+    commands/
+      init.js                 # init command
+      generate-site.js        # generate-site command
 apps/
-  web/                        # React + Vite + Tailwind dashboard
+  web/                        # React + Vite + Tailwind
+    src/
+      pages/
+        skalfos/              # Public Skalfos site pages
+          Home.jsx
+          Leaderboard.jsx
+          Rules.jsx
+          About.jsx
+      components/
+        SkalfosHeader.jsx
+        SkalfosFooter.jsx
   api/                        # Node + Express API
+    src/
+      routes/
+        leaderboard.js        # GET /api/leaderboard, GET /api/leaderboard/months
+      data/
+        leaderboard.js        # Mock leaderboard data
     .env.example              # Environment variable template
 packages/
   shared/                     # Shared types and validators
 docs/
-  spec.json                   # Source-of-truth app spec
+  spec.json                   # Source-of-truth app spec (includes Skalfos section)
 ```
 
 ## Running locally
@@ -83,6 +119,8 @@ Then edit `apps/api/.env` and fill in the required values:
 npm run dev:api
 # API runs on http://localhost:4000
 # Health check: http://localhost:4000/api/health
+# Leaderboard: http://localhost:4000/api/leaderboard?month=2026-04
+# Months: http://localhost:4000/api/leaderboard/months
 ```
 
 ### Start the web app
@@ -95,9 +133,18 @@ npm run dev:web
 The web app proxies `/api` requests to `localhost:4000`, so start both
 servers together for full functionality.
 
+### Skalfos public pages (no login required)
+
+| URL | Page |
+|-----|------|
+| `http://localhost:5173/#/` | Home — hero, CTA, prize banner, stream schedule |
+| `http://localhost:5173/#/leaderboard` | Leaderboard — top 100, month selector, search |
+| `http://localhost:5173/#/rules` | Rules & Terms — disclaimers, age 18+, worldwide |
+| `http://localhost:5173/#/about` | About — bio, stats, social links |
+
 ## Authentication
 
-The app uses **JWT stored in an httpOnly cookie** for secure session management.
+The dashboard (accessed when hash path is not a public page) uses **JWT stored in an httpOnly cookie** for secure session management.
 
 ### API endpoints
 
@@ -107,12 +154,14 @@ The app uses **JWT stored in an httpOnly cookie** for secure session management.
 | `POST` | `/api/auth/login` | Log in → sets session cookie |
 | `POST` | `/api/auth/logout` | Log out → clears session cookie |
 | `GET`  | `/api/me` | Returns current user (protected) |
+| `GET`  | `/api/leaderboard?month=YYYY-MM` | Leaderboard entries for a month (public) |
+| `GET`  | `/api/leaderboard/months` | Available months (public) |
 
 ### First login
 
-1. Open `http://localhost:5173`
-2. Click **Register** (or use the Register form) to create an account
-3. On subsequent visits, use **Sign In**
+1. Open `http://localhost:5173/#/dashboard`
+2. You'll be redirected to the login page
+3. Click **Register** to create an account, then **Sign In**
 
 ## Secrets required
 

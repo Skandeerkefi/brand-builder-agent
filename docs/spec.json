@@ -24,5 +24,47 @@
       "protected": true,
       "component": "Dashboard"
     }
-  ]
+  ],
+  "skalfos": {
+    "name": "Skalfos",
+    "mode": "view-only",
+    "region": "worldwide",
+    "leaderboardPrize": 1000,
+    "theme": {
+      "primary": "black",
+      "accent": "light"
+    },
+    "brand": {
+      "palette": {
+        "background": "#0a0a0a",
+        "surface": "#111111",
+        "card": "#161616",
+        "accent": "#e5e7eb",
+        "accentStrong": "#ffffff",
+        "muted": "#6b7280",
+        "border": "#1f2937",
+        "gold": "#fbbf24"
+      }
+    },
+    "pages": [
+      { "path": "/", "component": "Home", "public": true },
+      { "path": "/leaderboard", "component": "Leaderboard", "public": true },
+      { "path": "/rules", "component": "Rules", "public": true },
+      { "path": "/about", "component": "About", "public": true }
+    ],
+    "leaderboard": {
+      "topN": 100,
+      "prize": 1000,
+      "currency": "USD",
+      "period": "monthly",
+      "scoring": "points",
+      "disclaimer": "For entertainment only. No real wagering or payments."
+    },
+    "disclaimers": [
+      "This leaderboard is for entertainment purposes only.",
+      "No real wagering, payments, or prizes of monetary value are involved.",
+      "Must be 18+ to participate.",
+      "Worldwide availability may vary; check local laws and regulations."
+    ]
+  }
 }

@@ -1,5 +1,6 @@
 import process from "node:process";
 import { runInit } from "./commands/init.js";
+import { runGenerateSite } from "./commands/generate-site.js";
 
 function parseJsonSafe(s, fallback = {}) {
   try {
@@ -71,9 +72,13 @@ async function main() {
     case "init":
       await runInit({ repo, defaultBranch, token, args: invocation.args });
       break;
+    case "generate-site":
+    case "site":
+      await runGenerateSite({ repo, defaultBranch, token, args: invocation.args });
+      break;
     default:
       throw new Error(
-        `Unknown command "${invocation.command}". Supported: init`
+        `Unknown command "${invocation.command}". Supported: init, generate-site`
       );
   }
 }

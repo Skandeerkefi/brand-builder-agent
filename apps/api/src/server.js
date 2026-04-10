@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import authRouter from "./routes/auth.js";
 import meRouter from "./routes/me.js";
+import leaderboardRouter from "./routes/leaderboard.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/me", meRouter);
+app.use("/api/leaderboard", leaderboardRouter);
 
 // ── MongoDB connection + server start ─────────────────────────────────────
 const MONGODB_URI = process.env.MONGODB_URI;
