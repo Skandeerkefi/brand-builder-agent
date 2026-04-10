@@ -1,7 +1,10 @@
 {
   "name": "brand-builder-agent-app",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev:web": "npm run dev -w @app/web",
     "dev:api": "npm run dev -w @app/api",
