@@ -1,0 +1,65 @@
+name: Brand Builder Agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "Agent command (e.g. init)"
+        required: true
+        default: "init"
+      args:
+        description: 'JSON string of args (e.g. {"appName":"My App"})'
+        required: false
+        default: "{}"
+
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: agent-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    # Run on workflow_dispatch OR on issue comments that start with /agent (ignoring PR comments)
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request == null &&
+       startsWith(github.event.comment.body, '/agent '))
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: agent/package-lock.json
+
+      - name: Install agent deps
+        working-directory: agent
+        run: npm ci
+
+      - name: Run agent
+        working-directory: agent
+        env:
+          AGENT_GH_TOKEN: ${{ secrets.AGENT_GH_TOKEN }}
+          AGENT_REPO: ${{ github.repository }}
+          AGENT_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          AGENT_EVENT_NAME: ${{ github.event_name }}
+          AGENT_WORKFLOW_COMMAND: ${{ inputs.command }}
+          AGENT_WORKFLOW_ARGS: ${{ inputs.args }}
+          AGENT_COMMENT_BODY: ${{ github.event.comment.body }}
+          AGENT_ISSUE_NUMBER: ${{ github.event.issue.number }}
+          AGENT_ACTOR: ${{ github.actor }}
+        run: node src/index.js

@@ -1,0 +1,17 @@
+{
+  "appName": "Brand Builder Dashboard",
+  "type": "dashboard",
+  "auth": true,
+  "entity": "Project",
+  "theme": {
+    "primary": "#4f46e5",
+    "secondary": "#22c55e",
+    "background": "#0b1020",
+    "text": "#e5e7eb"
+  },
+  "routes": [
+    { "path": "/", "redirect": "/dashboard" },
+    { "path": "/login", "public": true, "component": "Login" },
+    { "path": "/dashboard", "protected": true, "component": "Dashboard" }
+  ]
+}
