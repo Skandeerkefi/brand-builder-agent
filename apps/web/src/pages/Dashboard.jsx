@@ -2,22 +2,32 @@ import React from "react";
 
 const CARDS = ["Projects", "Campaigns", "Assets"];
 
-export default function Dashboard({ onLogout }) {
+export default function Dashboard({ user, onLogout }) {
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    onLogout();
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <nav className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between">
         <span className="text-xl font-bold text-indigo-400">Brand Builder</span>
-        <button
-          onClick={onLogout}
-          className="text-sm text-gray-400 hover:text-white transition"
-        >
-          Sign out
-        </button>
+        <div className="flex items-center gap-4">
+          {user?.email && (
+            <span className="text-sm text-gray-400">{user.email}</span>
+          )}
+          <button
+            onClick={handleLogout}
+            className="text-sm text-gray-400 hover:text-white transition"
+          >
+            Sign out
+          </button>
+        </div>
       </nav>
       <main className="p-8 max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
         <p className="text-gray-400 mb-8">
-          Welcome! Use{" "}
+          Welcome{user?.email ? `, ${user.email}` : ""}! Use{" "}
           <code className="bg-gray-800 px-1 rounded font-mono">/agent</code>{" "}
           commands to scaffold features into this project.
         </p>
@@ -38,3 +48,4 @@ export default function Dashboard({ onLogout }) {
     </div>
   );
 }
+
