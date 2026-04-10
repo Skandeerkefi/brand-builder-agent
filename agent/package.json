@@ -1,0 +1,12 @@
+{
+  "name": "brand-builder-agent",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "GitHub Actions agent that scaffolds and iterates on a MERN dashboard via PRs.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {}
+}
